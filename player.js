@@ -113,4 +113,15 @@
     btn.style.boxShadow = '0 0 12px rgba(255,110,180,0.25)';
   });
 
+  // expose unmute for auto-unmute after loading
+  window.unmuteMusic = function () {
+    if (unmuted || !player) return;
+    player.unMute();
+    player.setVolume(80);
+    player.seekTo(START_TIME, true);
+    player.playVideo();
+    unmuted = true;
+    updateButton();
+  };
+
 })();

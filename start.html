@@ -158,25 +158,25 @@ setTimeout(() => {
   loading.style.cursor = 'pointer';
 }, 4400);
 
-startBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (!ready) return;
+function startExperience() {
   loading.classList.add('out');
   document.getElementById('scene').classList.add('visible');
   setTimeout(() => loading.remove(), 1600);
   applyGlobalColor();
   createRainText();
   createPhotoRain();
+  if (window.unmuteMusic) window.unmuteMusic();
+}
+
+startBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (!ready) return;
+  startExperience();
 });
 
 loading.addEventListener('click', () => {
   if (!ready) return;
-  loading.classList.add('out');
-  document.getElementById('scene').classList.add('visible');
-  setTimeout(() => loading.remove(), 1600);
-  applyGlobalColor();
-  createRainText();
-  createPhotoRain();
+  startExperience();
 });
 
 /* ── RAIN TEXT (60) ── */
