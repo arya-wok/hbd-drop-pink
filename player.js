@@ -91,13 +91,18 @@
       player.seekTo(START_TIME, true);
       player.playVideo();
       unmuted = true;
+      updateButton();
       return;
     }
     if (isPlaying) {
       player.pauseVideo();
+      isPlaying = false;
+      updateButton();
     } else {
       player.seekTo(START_TIME, true);
       player.playVideo();
+      isPlaying = true;
+      updateButton();
     }
   });
 
