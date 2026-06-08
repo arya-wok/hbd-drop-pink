@@ -115,7 +115,8 @@
 
   // expose unmute for auto-unmute after loading
   window.unmuteMusic = function () {
-    if (unmuted || !player) return;
+    if (unmuted) return;
+    if (!player) { setTimeout(window.unmuteMusic, 300); return; }
     player.unMute();
     player.setVolume(80);
     player.seekTo(START_TIME, true);

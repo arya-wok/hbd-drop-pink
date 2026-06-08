@@ -32,10 +32,12 @@ body{overflow:hidden;background:#050505;font-family:'Outfit',sans-serif;height:1
 
 /* CLICK START */
 .start-btn{
-  display:none;flex-direction:column;align-items:center;gap:10px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
   cursor:pointer;user-select:none;
+  opacity:0;visibility:hidden;
+  transition:opacity .6s,visibility .6s;
 }
-.start-btn.show{display:flex}
+.start-btn.show{opacity:1;visibility:visible}
 .start-main{
   color:#ff6eb4;font-size:18px;font-weight:200;letter-spacing:12px;
   text-shadow:0 0 14px #ff6eb4;
