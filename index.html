@@ -61,8 +61,6 @@ body{overflow:hidden;background:#050505;font-family:'Outfit',sans-serif;height:1
 .photo:hover{transform:scale(1.25)!important}
 .photo img{width:100%;height:100%;object-fit:cover}
 
-/* MUSIC BTN */
-#musicBtn:hover{transform:scale(1.04)}
 </style>
 </head>
 <body>
@@ -81,29 +79,7 @@ body{overflow:hidden;background:#050505;font-family:'Outfit',sans-serif;height:1
   <div id="vignette"></div>
 </div>
 
-<!-- YOUTUBE PLAYER -->
-<div id="ytPlayer" style="position:fixed;left:-9999px;top:0;width:200px;height:120px;opacity:0.01;pointer-events:none;"></div>
-
-<!-- MUSIC BUTTON -->
-<div id="musicBtn" style="
-  position:fixed;bottom:28px;right:28px;z-index:100;
-  display:flex;align-items:center;gap:6px;
-  padding:7px 14px;border-radius:20px;
-  background:rgba(5,5,5,.72);
-  border:1px solid rgba(255,110,180,.4);
-  color:#ff6eb4;cursor:pointer;
-  font-family:'Outfit',sans-serif;font-weight:200;font-size:10px;
-  letter-spacing:1px;
-  box-shadow:0 0 12px rgba(255,110,180,.25);
-  transition:background .3s,border-color .3s,box-shadow .3s,color .3s;
-">
-  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" id="musicSvg">
-    <path d="M2 2l9 4.5L2 11V2z" fill="#ff6eb4"/>
-  </svg>
-  <span id="musicLabel">Play Music</span>
-</div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
+<script src="player.js"></script>
 <script>
 const MESSAGES = [
   "i love you","i miss you","thinking of u","my favorite person",
@@ -145,15 +121,6 @@ function applyGlobalColor() {
     el.style.borderColor = color + '55';
     el.style.boxShadow = `0 0 14px ${color}44`;
   });
-  const btn = document.getElementById('musicBtn');
-  btn.style.color = color;
-  btn.style.borderColor = `rgba(${r},${g},${b},.45)`;
-  btn.style.boxShadow = `0 0 12px rgba(${r},${g},${b},.28)`;
-  btn.style.background = `rgba(${r},${g},${b},.08)`;
-  const svg = document.getElementById('musicSvg');
-  if (svg) { svg.querySelectorAll('path,rect').forEach(p => p.setAttribute('fill', color)); }
-  const label = document.getElementById('musicLabel');
-  if (label) label.style.color = color;
 
   // bg glow ikut warna
   document.getElementById('bg').style.background =
@@ -235,86 +202,7 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(loop);
 })();
 
-/* ── YOUTUBE MUSIC CONTROLS ── */
-const musicBtn = document.getElementById('musicBtn');
-let player = null;
-let isPlaying = false;
-let unmuted = false;
-const VIDEO_ID = 'NZGHXy1IAHM';
-const START_TIME = 60;
 
-function updateButton() {
-  const svg = document.getElementById('musicSvg');
-  const label = document.getElementById('musicLabel');
-  if (isPlaying && unmuted) {
-    svg.innerHTML = '<rect x="2" y="2" width="3" height="9" fill="#ff6eb4"/><rect x="8" y="2" width="3" height="9" fill="#ff6eb4"/>';
-    label.textContent = 'Pause Music';
-  } else if (isPlaying && !unmuted) {
-    svg.innerHTML = '<rect x="2" y="2" width="3" height="9" fill="#ff6eb4"/><rect x="8" y="2" width="3" height="9" fill="#ff6eb4"/>';
-    label.textContent = 'Unmute Music';
-  } else {
-    svg.innerHTML = '<path d="M2 2l9 4.5L2 11V2z" fill="#ff6eb4"/>';
-    label.textContent = 'Play Music';
-  }
-}
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('ytPlayer', {
-    videoId: VIDEO_ID,
-    playerVars: {
-      autoplay: 1,
-      start: START_TIME,
-      controls: 0,
-      rel: 0,
-      modestbranding: 1,
-      loop: 1,
-      playlist: VIDEO_ID,
-      enablejsapi: 1,
-      mute: 1
-    },
-    events: {
-      onReady: function () {
-        player.setVolume(80);
-        player.seekTo(START_TIME, true);
-      },
-      onStateChange: function (e) {
-        if (e.data === YT.PlayerState.PLAYING) { isPlaying = true; updateButton(); }
-        else if (e.data === YT.PlayerState.PAUSED) { isPlaying = false; updateButton(); }
-        else if (e.data === YT.PlayerState.ENDED) { player.seekTo(START_TIME, true); player.playVideo(); }
-        else if (e.data === YT.PlayerState.UNSTARTED) { player.playVideo(); }
-      }
-    }
-  });
-}
-
-musicBtn.addEventListener('click', function () {
-  if (!player) return;
-  if (!unmuted) {
-    player.unMute();
-    player.setVolume(80);
-    player.seekTo(START_TIME, true);
-    player.playVideo();
-    unmuted = true;
-    return;
-  }
-  if (isPlaying) {
-    player.pauseVideo();
-  } else {
-    player.seekTo(START_TIME, true);
-    player.playVideo();
-  }
-});
-
-musicBtn.addEventListener('mouseenter', function () {
-  musicBtn.style.background = 'rgba(255,110,180,0.15)';
-  musicBtn.style.borderColor = 'rgba(255,110,180,0.7)';
-  musicBtn.style.boxShadow = '0 0 20px rgba(255,110,180,0.18)';
-});
-musicBtn.addEventListener('mouseleave', function () {
-  musicBtn.style.background = 'rgba(5,5,5,0.72)';
-  musicBtn.style.borderColor = 'rgba(255,110,180,0.4)';
-  musicBtn.style.boxShadow = '0 0 12px rgba(255,110,180,0.25)';
-});
 </script>
 </body>
 </html>
