@@ -172,49 +172,55 @@ setTimeout(() => {
   document.getElementById('scene').classList.add('visible');
   setTimeout(() => document.getElementById('loading').remove(), 1600);
   applyGlobalColor();
+  createRainText();
+  createPhotoRain();
 }, 4400);
 
 /* ── RAIN TEXT (60) ── */
-for (let i = 0; i < 60; i++) {
-  const el = document.createElement('div');
-  el.className = 'text';
-  el.innerText = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
-  const depth = Math.random();
-  const sz = 9 + depth * 18;
-  el.style.cssText = `
-    left:${Math.random()*105}vw;
-    font-size:${sz}px;
-    opacity:${0.1 + depth * 0.5};
-    color:#ff6eb4;
-    animation-duration:${10+Math.random()*22}s;
-    animation-delay:${-Math.random()*30}s;
-    --tz:${depth*200-80}px;
-    --ry:${(Math.random()-.5)*28}deg;
-    filter:none;
-  `;
-  document.body.appendChild(el);
+function createRainText() {
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'text';
+    el.innerText = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+    const depth = Math.random();
+    const sz = 9 + depth * 18;
+    el.style.cssText = `
+      left:${Math.random()*105}vw;
+      font-size:${sz}px;
+      opacity:${0.1 + depth * 0.5};
+      color:#ff6eb4;
+      animation-duration:${10+Math.random()*22}s;
+      animation-delay:${-Math.random()*30}s;
+      --tz:${depth*200-80}px;
+      --ry:${(Math.random()-.5)*28}deg;
+      filter:none;
+    `;
+    document.body.appendChild(el);
+  }
 }
 
 /* ── PHOTO RAIN (8) ── */
-for (let i = 0; i < 8; i++) {
-  const el = document.createElement('div');
-  el.className = 'photo';
-  const depth = Math.random();
-  const sz = 65 + depth * 65;
-  el.style.cssText = `
-    width:${sz}px;height:${sz}px;
-    left:${Math.random()*100}vw;
-    opacity:${0.3+depth*0.5};
-    animation-duration:${16+Math.random()*22}s;
-    animation-delay:${-Math.random()*25}s;
-    --tz:${depth*160-60}px;
-    --ry:${(Math.random()-.5)*30}deg;
-  `;
-  const img = document.createElement('img');
-  img.src = PHOTOS[i % PHOTOS.length];
-  img.loading = 'lazy';
-  el.appendChild(img);
-  document.body.appendChild(el);
+function createPhotoRain() {
+  for (let i = 0; i < 8; i++) {
+    const el = document.createElement('div');
+    el.className = 'photo';
+    const depth = Math.random();
+    const sz = 65 + depth * 65;
+    el.style.cssText = `
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}vw;
+      opacity:${0.3+depth*0.5};
+      animation-duration:${16+Math.random()*22}s;
+      animation-delay:${-Math.random()*25}s;
+      --tz:${depth*160-60}px;
+      --ry:${(Math.random()-.5)*30}deg;
+    `;
+    const img = document.createElement('img');
+    img.src = PHOTOS[i % PHOTOS.length];
+    img.loading = 'lazy';
+    el.appendChild(img);
+    document.body.appendChild(el);
+  }
 }
 
 /* ── MOUSE PARALLAX ── */
