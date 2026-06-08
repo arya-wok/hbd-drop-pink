@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Player</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050515;display:flex;align-items:center;justify-content:center;height:100vh}
+#musicButton{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 24px;border-radius:28px;
+  background:rgba(5,5,15,0.72);
+  border:1px solid rgba(212,168,67,0.4);
+  color:rgba(212,168,67,0.85);cursor:pointer;
+  font-size:12px;letter-spacing:1px;font-weight:300;
+  transition:background .25s,border-color .25s,box-shadow .25s;
+  user-select:none;
+}
+</style>
+</head>
+<body>
+
+<div id="player-wrapper" style="position:fixed;left:-9999px;top:0;width:200px;height:120px;opacity:0.01;pointer-events:none;">
+  <iframe id="ytFrame" width="200" height="120" src="https://www.youtube.com/embed/NZGHXy1IAHM?autoplay=1&start=60&end=150&loop=1&playlist=NZGHXy1IAHM&controls=0&rel=0&modestbranding=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
+<div id="music-btn-wrapper" style="position:fixed;bottom:28px;right:28px;z-index:9999;">
+  <div id="musicButton">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="flex-shrink:0;">
+      <path d="M2 2l9 4.5L2 11V2z" fill="rgba(212,168,67,0.85)"/>
+    </svg>
+    Mainkan Musik
+  </div>
+</div>
+
+<script>
+var frame = document.getElementById('ytFrame');
+var isPlaying = false;
+var frameReady = false;
+
+frame.onload = function () {
+  frameReady = true;
+};
+
+function sendCommand(func, args) {
+  if (frameReady && frame.contentWindow) {
+    frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: args || [] }), '*');
+  }
+}
+
+function updateButton() {
+  var btn = document.getElementById('musicButton');
+  if (isPlaying) {
+    btn.innerHTML =
+      '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="flex-shrink:0;"><rect x="2" y="2" width="3" height="9" fill="rgba(212,168,67,0.85)"/><rect x="8" y="2" width="3" height="9" fill="rgba(212,168,67,0.85)"/></svg> Pause Musik';
+  } else {
+    btn.innerHTML =
+      '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="flex-shrink:0;"><path d="M2 2l9 4.5L2 11V2z" fill="rgba(212,168,67,0.85)"/></svg> Mainkan Musik';
+  }
+}
+
+window.addEventListener('message', function (e) {
+  if (e.origin !== 'https://www.youtube.com') return;
+  var data;
+  try { data = JSON.parse(e.data); } catch (ex) { return; }
+  if (data.event === 'onStateChange') {
+    if (data.info === 1) { isPlaying = true; updateButton(); }
+    else if (data.info === 2) { isPlaying = false; updateButton(); }
+    else if (data.info === 0) { sendCommand('seekTo', [60, true]); sendCommand('playVideo'); }
+  }
+});
+
+var btn = document.getElementById('musicButton');
+btn.addEventListener('click', function () {
+  if (isPlaying) {
+    sendCommand('pauseVideo');
+  } else {
+    sendCommand('playVideo');
+  }
+});
+
+btn.addEventListener('mouseenter', function () {
+  btn.style.background = 'rgba(212,168,67,0.15)';
+  btn.style.borderColor = 'rgba(212,168,67,0.7)';
+  btn.style.boxShadow = '0 0 20px rgba(212,168,67,0.18)';
+});
+btn.addEventListener('mouseleave', function () {
+  btn.style.background = 'rgba(5,5,15,0.72)';
+  btn.style.borderColor = 'rgba(212,168,67,0.4)';
+  btn.style.boxShadow = 'none';
+});
+</script>
+</body>
+</html>
